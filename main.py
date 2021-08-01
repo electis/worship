@@ -5,7 +5,6 @@ import pylivestream.api as pls
 
 
 def stream(audio_path: str, background_file: str, use_meta=None):
-    # https://github.com/scivision/PyLivestream
     pls.stream_files(
         Path('pylivestream.ini'), 'youtube',
         video_path=Path('/'.join(audio_path.split('/')[:-1])),
