@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import random
 import typing as T
+from unittest.mock import patch
 
 from pylivestream.glob import fileglob
 
@@ -11,8 +12,31 @@ except ImportError:
     TinyTag = None
 from pylivestream.base import FileIn
 from pylivestream.utils import meta_caption
+from pylivestream.ffmpeg import Ffmpeg
 
 
+class Fake:
+
+    def drawtext(self, text: str = None) -> T.List[str]:
+        # fontfile=/path/to/font.ttf:
+        if not text:  # None or '' or [] etc.
+            return []
+
+        fontcolor = "fontcolor=white"
+        fontsize = "fontsize=24"
+        box = "box=1"
+        boxcolor = "boxcolor=black@0.5"
+        border = "boxborderw=5"
+        x = "x=(w-text_w)/2"
+        y = "y=(h-text_h)*3/4"
+
+        return [
+            "-vf",
+            f"drawtext=text='{text}':{fontcolor}:{fontsize}:{box}:{boxcolor}:{border}:{x}:{y}",
+        ]
+
+
+@patch.object(Ffmpeg, 'drawtext', Fake.drawtext)
 def playonce(
         flist: T.List[Path],
         image: Path,
@@ -32,7 +56,7 @@ def playonce(
             # TODO добавлять молитвенные нужды
             try:
                 caption = meta_caption(TinyTag.get(str(f)))
-                caption += "\\nМолитвенная нужда 1\\n\\nМолитвенная нужда 2\\n\\nИ т.д."
+                # caption += "\\nМолитвенная нужда 1\\n\\nМолитвенная нужда 2\\n\\nИ т.д."
                 print(caption)
             except LookupError:
                 caption = None
@@ -48,7 +72,7 @@ def playonce(
                 print('playing timeout, stop.')
                 return True
             else:
-                print((stop_time - datetime.now()).seconds / 60, 'minutes left')
+                print(int((stop_time - datetime.now()).seconds / 60), 'minutes left')
 
 
 def stream_files(
