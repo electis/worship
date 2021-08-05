@@ -29,8 +29,10 @@ def playonce(
 
     for f in flist:
         if usemeta and TinyTag:
+            # TODO добавлять молитвенные нужды
             try:
                 caption = meta_caption(TinyTag.get(str(f)))
+                caption += "\\nМолитвенная нужда 1\\n\\nМолитвенная нужда 2\\n\\nИ т.д."
                 print(caption)
             except LookupError:
                 caption = None
@@ -46,7 +48,7 @@ def playonce(
                 print('playing timeout, stop.')
                 return True
             else:
-                print(stop_time - (datetime.now()).seconds, 'seconds left')
+                print((stop_time - datetime.now()).seconds / 60, 'minutes left')
 
 
 def stream_files(
