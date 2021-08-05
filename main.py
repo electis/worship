@@ -1,19 +1,19 @@
 import os
 from pathlib import Path
 
-import pylivestream.api as pls
+from helpers import stream_files
 
 
-def stream(audio_path: str, background_file: str, use_meta=None):
-    pls.stream_files(
+def stream(audio_path: str, background_file: str, use_meta: bool = None):
+    stream_files(
         Path('pylivestream.ini'), 'youtube',
         video_path=Path('/'.join(audio_path.split('/')[:-1])),
         still_image=Path(background_file),
         glob=audio_path.split('/')[-1],
         loop=True,
         shuffle=True,
-        assume_yes=True,
-        no_meta=use_meta,
+        usemeta=use_meta,
+        timeout=60
     )
 
 
