@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import random
 import typing as T
-from unittest.mock import patch
 
 from pylivestream.glob import fileglob
 
@@ -12,12 +11,11 @@ except ImportError:
     TinyTag = None
 from pylivestream.base import FileIn
 from pylivestream.utils import meta_caption
-from pylivestream.ffmpeg import Ffmpeg
 
 
 class Fake:
 
-    def drawtext(self, text: str = None) -> T.List[str]:
+    def drawtext(self, text: str = None, up=False, row=0) -> T.List[str]:
         # fontfile=/path/to/font.ttf:
         if not text:  # None or '' or [] etc.
             return []
@@ -28,15 +26,32 @@ class Fake:
         boxcolor = "boxcolor=black@0.5"
         border = "boxborderw=5"
         x = "x=(w-text_w)/2"
-        y = "y=(h-text_h)*3/4"
+        y = "y=(h-text_h)*1/4" if up else "y=(h-text_h)*3/4"
 
         return [
             "-vf",
             f"drawtext=text='{text}':{fontcolor}:{fontsize}:{box}:{boxcolor}:{border}:{x}:{y}",
         ]
 
+    def draw_pray(self, text: str = None):
+        if not text:
+            return []
 
-@patch.object(Ffmpeg, 'drawtext', Fake.drawtext)
+        text_list = text.split('|')
+        meta = self.drawtext(text_list[0])
+
+        if len(text_list) == 1 or text_list[1] == '':
+            return meta
+
+        pray = self.drawtext(text_list[1], up=True, row=0)
+
+        if meta and pray:
+            meta[1] += f', {pray[1]}'
+
+        return meta or pray
+
+
+# @patch.object(Ffmpeg, 'drawtext', Fake.drawtext)
 def playonce(
         flist: T.List[Path],
         image: Path,
@@ -53,13 +68,16 @@ def playonce(
 
     for f in flist:
         if usemeta and TinyTag:
-            # TODO добавлять молитвенные нужды
+            pray_text = "Молитвенная нужда, длинный текст, очень длинный текст, чтобы не вошел в один экран" \
+                        "\nА ещё с переносами строк\nи вообще много чего понаписали\nсмайлики, эмодзи 🙂💼⚖️✈️️✋✊"
+            pray_text = "Ладно, сначала короткий протестим"
+            pray_text = f"|{pray_text}"
             try:
                 caption = meta_caption(TinyTag.get(str(f)))
-                # caption += "\\nМолитвенная нужда 1\\n\\nМолитвенная нужда 2\\n\\nИ т.д."
+                caption += pray_text
                 print(caption)
             except LookupError:
-                caption = None
+                caption = pray_text
         else:
             caption = None
 
@@ -73,6 +91,10 @@ def playonce(
                 return True
             else:
                 print(int((stop_time - datetime.now()).seconds / 60), 'minutes left')
+
+
+def insert_pray(cmd: list):
+    pass
 
 
 def stream_files(
