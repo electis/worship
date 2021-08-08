@@ -1,7 +1,11 @@
-import os
 from pathlib import Path
 
+import os
+
 from helpers import stream_files
+from managers import get_config
+from serializers import Config
+from utils import prepare, proceed_stream
 
 
 def stream(audio_path: str, background_file: str, use_meta: bool = None):
@@ -15,6 +19,14 @@ def stream(audio_path: str, background_file: str, use_meta: bool = None):
         usemeta=use_meta,
         timeout=60
     )
+
+
+def proceed_worship():
+    config: Config = get_config()
+    prepare(config)
+    while True:
+        if not proceed_stream(config):
+            break
 
 
 if __name__ == '__main__':

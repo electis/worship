@@ -11,6 +11,7 @@ except ImportError:
     TinyTag = None
 from pylivestream.base import FileIn
 from pylivestream.utils import meta_caption
+from pylivestream.ffmpeg import Ffmpeg
 
 
 class Fake:
