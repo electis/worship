@@ -22,8 +22,9 @@ def stream(audio_path: str, background_file: str, use_meta: bool = None):
 
 
 def proceed_worship():
+    # TODO log playing files
     config: Config = get_config()
-    prepare(config)
+    config = prepare(config)
     while True:
         if not proceed_stream(config):
             break
