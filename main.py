@@ -5,7 +5,7 @@ import os
 from helpers import stream_files
 from managers import get_config
 from serializers import Config
-from utils import prepare, proceed_stream
+from utils import extend, proceed_stream
 
 
 def stream(audio_path: str, background_file: str, use_meta: bool = None):
@@ -24,7 +24,7 @@ def stream(audio_path: str, background_file: str, use_meta: bool = None):
 def proceed_worship():
     # TODO log playing files
     config: Config = get_config()
-    config = prepare(config)
+    config = extend(config)
     while True:
         if not proceed_stream(config):
             break

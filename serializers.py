@@ -18,12 +18,16 @@ class Prayer(BaseModel):
     ...
 
 
+class Extension(BaseModel):
+    flist = List[str]
+    stop_time: Optional[datetime]
+
+
 class Config(BaseModel):
     prayers: Optional[List[Prayer]]
     youtube_key: str
     default_background: str
     ini: Optional[str]
     audio_path: str
-    stop_time: Optional[datetime]
     timeout: Optional[int]
-    flist = List[str]
+    extension = Optional[Extension]
