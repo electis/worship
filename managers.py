@@ -10,5 +10,6 @@ def get_config():
         youtube_key = env('youtube_key'),
         default_background = env('default_background'),
         audio_path = env('audio_path'),
+        timeout = env.int('timeout'),
     )
     return config

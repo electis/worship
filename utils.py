@@ -54,5 +54,5 @@ def proceed_stream(config: Config):
             if config.extension.stop_time and datetime.now() > config.extension.stop_time:
                 print('playing timeout, stop.')
                 return True
-            else:
+            elif config.extension.stop_time:
                 print(int((config.extension.stop_time - datetime.now()).seconds / 60), 'minutes left')
