@@ -22,15 +22,13 @@ def stream(audio_path: str, background_file: str, use_meta: bool = None):
 
 
 def proceed_worship():
-    # TODO log playing files
     config: Config = get_config()
     config = extend(config)
-    while True:
-        if not proceed_stream(config):
-            break
+    proceed_stream(config)
 
 
 if __name__ == '__main__':
-    audio_path = os.getenv('audio_path', '/storage/download/music/worship/*.mp3')
-    background_file = os.getenv('background_file', '/storage/download/music/church.jpg')
-    stream(audio_path, background_file, os.getenv('use_meta', True))
+    proceed_worship()
+    # audio_path = os.getenv('audio_path', '/storage/download/music/worship/*.mp3')
+    # background_file = os.getenv('background_file', '/storage/download/music/church.jpg')
+    # stream(audio_path, background_file, os.getenv('use_meta', True))

@@ -1,4 +1,5 @@
-from typing import Optional, Union, Literal, List
+from pathlib import PosixPath
+from typing import Optional, Union, Literal, List, Tuple
 from typing import NewType
 
 from datetime import datetime
@@ -19,15 +20,15 @@ class Prayer(BaseModel):
 
 
 class Extension(BaseModel):
-    flist = List[str]
+    flist: List[PosixPath]
     stop_time: Optional[datetime]
 
 
 class Config(BaseModel):
-    prayers: Optional[List[Prayer]]
     youtube_key: str
     default_background: str
-    ini: Optional[str]
     audio_path: str
     timeout: Optional[int]
-    extension = Optional[Extension]
+    prayers: Optional[List[Prayer]]
+    ini: Optional[str]
+    extension: Optional[Extension]
