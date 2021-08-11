@@ -1,3 +1,5 @@
+import time
+from datetime import datetime
 from pathlib import Path
 
 from helpers import stream_files
@@ -22,7 +24,11 @@ def stream(audio_path: str, background_file: str, use_meta: bool = None):
 def proceed_worship():
     config: Config = get_config()
     config = extend(config)
-    proceed_stream(config)
+    while True:
+        if datetime.now().hour in (7, 10, 13, 16, 19):
+            proceed_stream(config)
+        else:
+            time.sleep(30)
 
 
 if __name__ == '__main__':

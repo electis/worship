@@ -1,4 +1,4 @@
-"""filling.py ?"""
+import logging
 from datetime import datetime, timedelta
 from pathlib import Path
 import random
@@ -9,6 +9,9 @@ from pylivestream.utils import meta_caption
 from tinytag import TinyTag
 
 from serializers import Config, Extension
+
+
+logging.basicConfig(filename='output.log', level=logging.INFO)
 
 
 def extend(config: Config):
@@ -23,6 +26,10 @@ def extend(config: Config):
         stop_time = None
 
     config.extension = Extension(flist=flist, stop_time=stop_time)
+
+    with open("youtube.key", "w") as text_file:
+        print(config.youtube_key, file=text_file)
+
     return config
 
 def get_pray(config, num):
@@ -35,7 +42,7 @@ def get_pray(config, num):
 
 
 def proceed_stream(config: Config):
-    print(datetime.now(), 'proceed_stream')
+    logging.info('proceed_stream')
     while True:
         for num, audio in enumerate(config.extension.flist):
             pray_text = get_pray(config, num)
@@ -50,11 +57,12 @@ def proceed_stream(config: Config):
             # TODO insert pray here
             # TODO without caption run too slow (without -codec:v libx264 -pix_fmt yuv420p -preset ultrafast -b:v 2000)
             # TODO Òû âåñü ìèð äëÿ ìåíÿ - http://fon-ki.com/ - 4UBAND (4f41e4c07167a1.mp3)
-            print(datetime.now(), audio, caption)
+            logging.info(audio)
+            logging.info(caption)
             s.golive()
 
             if config.extension.stop_time and datetime.now() > config.extension.stop_time:
-                print('playing timeout, stop.')
+                logging.info('playing timeout, stop.')
                 return True
             elif config.extension.stop_time:
-                print(int((config.extension.stop_time - datetime.now()).seconds / 60), 'minutes left')
+                logging.info(f"{int((config.extension.stop_time - datetime.now()).seconds / 60)} minutes left")
