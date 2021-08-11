@@ -35,20 +35,22 @@ def get_pray(config, num):
 
 
 def proceed_stream(config: Config):
+    print(datetime.now(), 'proceed_stream')
     while True:
         for num, audio in enumerate(config.extension.flist):
-            # TODO log playing files
             pray_text = get_pray(config, num)
             try:
                 caption = meta_caption(TinyTag.get(str(audio)))
                 caption += pray_text
-                print(caption)
             except LookupError:
                 caption = pray_text
 
             s = FileIn(Path('pylivestream.ini'), 'youtube',
                        infn=audio, loop=False, image=config.default_background, caption=caption, yes=True)
             # TODO insert pray here
+            # TODO without caption run too slow (without -codec:v libx264 -pix_fmt yuv420p -preset ultrafast -b:v 2000)
+            # TODO Òû âåñü ìèð äëÿ ìåíÿ - http://fon-ki.com/ - 4UBAND (4f41e4c07167a1.mp3)
+            print(datetime.now(), audio, caption)
             s.golive()
 
             if config.extension.stop_time and datetime.now() > config.extension.stop_time:

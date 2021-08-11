@@ -1,7 +1,5 @@
 from pathlib import Path
 
-import os
-
 from helpers import stream_files
 from managers import get_config
 from serializers import Config
