@@ -24,12 +24,14 @@ def stream(audio_path: str, background_file: str, use_meta: bool = None):
 def proceed_worship():
     config: Config = get_config()
     config = extend(config)
-    while True:
-        if datetime.now().hour in (7, 10, 13, 16, 19):
-            proceed_stream(config)
-        else:
-            time.sleep(30)
-
+    if config.hours:
+        while True:
+            if datetime.now().hour in config.hours:
+                proceed_stream(config)
+            else:
+                time.sleep(30)
+    else:
+        proceed_stream(config)
 
 if __name__ == '__main__':
     proceed_worship()
