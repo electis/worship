@@ -29,6 +29,7 @@ class Config(BaseModel):
     default_background: str
     audio_path: str
     timeout: Optional[int]
+    google_api_key: Optional[str]
     hours: Optional[list]
     prayers: Optional[List[Prayer]]
     ini: Optional[str]

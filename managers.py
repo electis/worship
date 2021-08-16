@@ -11,6 +11,7 @@ def get_config():
         default_background=env('default_background'),
         audio_path=env('audio_path'),
         timeout=env.int('timeout'),
-        hours=env.list('hours', [], subcast=int)
+        hours=env.list('hours', [], subcast=int),
+        google_api_key=env('GOOGLE_API_KEY', None),
     )
     return config

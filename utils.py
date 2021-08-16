@@ -4,6 +4,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import random
+import requests
 
 from pylivestream import FileIn
 from pylivestream.ffmpeg import Ffmpeg
@@ -12,7 +13,6 @@ from pylivestream.utils import meta_caption
 from tinytag import TinyTag
 
 from serializers import Config, Extension
-
 
 logging.basicConfig(filename='output.log', level=logging.INFO)
 
@@ -102,14 +102,37 @@ def extend(config: Config):
 
     return config
 
+
 def get_pray(config, num):
     pray_text = "Молитвенная нужда, длинный текст, очень длинный текст, чтобы не вошел в один экран" \
-                " ещё длиннее\nи с переносами строк, lorem ipsum"*3
+                " ещё длиннее\nи с переносами строк, lorem ipsum" * 3
 
     return f"|{pray_text}"
 
 
+def create_stream(config: Config):
+    API_KEY = config.google_api_key
+    url = f'https://www.googleapis.com/youtube/v3/liveStreams'
+    headers = dict(Authorization=f"Bearer {API_KEY}")
+    data = {
+        "snippet": {
+            "title": "Your new video stream's name",
+            "description": "A description of your video stream. This field is optional."
+        },
+        "cdn": {
+            "frameRate": "60fps",
+            "ingestionType": "rtmp",
+            "resolution": "1080p"
+        },
+        "contentDetails": {
+            "isReusable": False
+        }
+    }
+    requests.post(url, headers=headers, data=data)
+
+
 def proceed_stream(config: Config):
+    create_stream(config)
     logging.info('proceed_stream')
     while True:
         for num, audio in enumerate(config.extension.flist):
