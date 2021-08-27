@@ -1,4 +1,5 @@
 *.key
+*.json
 /local
 /.idea
 .env
