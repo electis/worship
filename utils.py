@@ -15,7 +15,10 @@ from tinytag import TinyTag
 
 from serializers import Config, Extension
 
-logging.basicConfig(filename='output.log', level=logging.INFO)
+logging.basicConfig(
+    filename='output.log', level=logging.INFO,
+    format='%(asctime)s %(levelname)s %(module)s - %(funcName)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S',
+)
 
 
 class Fake:

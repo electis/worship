@@ -25,13 +25,21 @@ def proceed_worship():
     config: Config = get_config()
     config = extend(config)
     if config.hours:
+        minutes = 0
         while True:
             if datetime.now().hour in config.hours:
+                config: Config = get_config()
+                config = extend(config)
                 log_tg('Worship start', config)
                 proceed_stream(config)
                 log_tg('Worship end', config)
             else:
-                time.sleep(30)
+                time.sleep(60)
+                minutes += 1
+            if minutes == 5:
+                config: Config = get_config()
+                config = extend(config)
+                minutes = 0
     else:
         log_tg('Worship start', config)
         proceed_stream(config)
