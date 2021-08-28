@@ -5,6 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import random
+import requests
 
 from pylivestream import FileIn
 from pylivestream.ffmpeg import Ffmpeg
@@ -26,18 +27,18 @@ class Fake:
             return []
 
         if up:
-            part = '1/8'
+            part = '1/16'
             fontcolor = "fontcolor=yellow"
         else:
-            part = '3/4'
+            part = '11/12'
             fontcolor = "fontcolor=white"
-        fontsize = "fontsize=32"
+        fontsize = "fontsize=24"
         box = "box=1"
         boxcolor = "boxcolor=black@0.5"
-        border = "boxborderw=5"
+        border = "boxborderw=4"
         x = "x=(w-text_w)/2"
         # y = f"y=h*{part}+(text_h+20)*{row}"
-        y = f"y=h*{part}+40*{row}"
+        y = f"y=h*{part}+32*{row}"
         # y = "y=(h-text_h)*3/4"
 
         return [
@@ -175,3 +176,23 @@ def proceed_stream(config: Config):
                 return True
             elif config.extension.stop_time:
                 logging.info(f"{int((config.extension.stop_time - datetime.now()).seconds / 60)} minutes left")
+
+
+def send_message(text, chat_id, token, parse_mode='Markdown'):
+    try:
+        response = requests.get(f'https://api.telegram.org/bot{token}/sendMessage', timeout=10, params=dict(
+            chat_id=chat_id, text=text, parse_mode=parse_mode))
+    except Exception as Ex:
+        print(Ex)
+        return False
+    else:
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f'status_code {response.status_code}')
+            return False
+
+
+def log_tg(text, config):
+    if config.tg_chat_id and config.tg_token:
+        return send_message(text, config.tg_chat_id, config.tg_token)

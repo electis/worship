@@ -13,5 +13,7 @@ def get_config():
         timeout=env.int('timeout'),
         hours=env.list('hours', [], subcast=int),
         google_api_key=env('GOOGLE_API_KEY', None),
+        tg_chat_id=env('TGRAM_CHATID', None),
+        tg_token=env('TGRAM_TOKEN', None),
     )
     return config

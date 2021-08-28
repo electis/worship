@@ -19,6 +19,12 @@ class Prayer(BaseModel):
     ...
 
 
+class Stream(BaseModel):
+    start_time: int
+    duration: int
+    picture: str
+
+
 class Extension(BaseModel):
     flist: List[PosixPath]
     stop_time: Optional[datetime]
@@ -30,7 +36,10 @@ class Config(BaseModel):
     audio_path: str
     timeout: Optional[int]
     google_api_key: Optional[str]
+    tg_chat_id: Optional[str]
+    tg_token: Optional[str]
     hours: Optional[list]
     prayers: Optional[List[Prayer]]
     ini: Optional[str]
     extension: Optional[Extension]
+    streams: Optional[Stream]
