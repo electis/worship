@@ -1,4 +1,5 @@
 import logging
+from contextlib import contextmanager
 
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -116,7 +117,7 @@ def extend(config: Config):
     return config
 
 
-def get_pray(config, num):
+def get_pray(extension, num):
     promises = [
         'Ибо только Я знаю намерения, какие имею о вас, говорит Господь, '
         'намерения во благо, не на зло, чтобы дать вам будущность и надежду.\nИер. 29,11.',
@@ -154,11 +155,11 @@ def get_pray(config, num):
     return f"|{pray_text}"
 
 
-def proceed_stream(config: Config):
+def proceed_stream(extension: Extension):
     logging.info('proceed_stream')
     while True:
-        for num, audio in enumerate(config.extension.flist):
-            pray_text = get_pray(config, num)
+        for num, audio in enumerate(extension.flist):
+            pray_text = get_pray(extension, num)
             try:
                 caption = meta_caption(TinyTag.get(str(audio)))
                 caption += pray_text
@@ -167,18 +168,18 @@ def proceed_stream(config: Config):
 
             with patch.object(Ffmpeg, 'drawtext', Fake.draw_pray):
                 s = FileIn(Path('pylivestream.ini'), 'youtube',
-                           infn=audio, loop=False, image=config.default_background, caption=caption, yes=True)
+                           infn=audio, loop=False, image=extension.default_background, caption=caption, yes=True)
             # TODO without caption run too slow (without -codec:v libx264 -pix_fmt yuv420p -preset ultrafast -b:v 2000)
             # TODO Òû âåñü ìèð äëÿ ìåíÿ - http://fon-ki.com/ - 4UBAND (4f41e4c07167a1.mp3)
             logging.info(audio)
             logging.info(caption)
             s.golive()
 
-            if config.extension.stop_time and datetime.now() > config.extension.stop_time:
+            if extension.stop_time and datetime.now() > extension.stop_time:
                 logging.info('playing timeout, stop.')
                 return True
-            elif config.extension.stop_time:
-                logging.info(f"{int((config.extension.stop_time - datetime.now()).seconds / 60)} minutes left")
+            elif extension.stop_time:
+                logging.info(f"{int((extension.stop_time - datetime.now()).seconds / 60)} minutes left")
 
 
 def send_message(text, chat_id, token, parse_mode='Markdown'):
@@ -196,6 +197,16 @@ def send_message(text, chat_id, token, parse_mode='Markdown'):
             return False
 
 
-def log_tg(text, config):
-    if config.tg_chat_id and config.tg_token:
-        return send_message(text, config.tg_chat_id, config.tg_token)
+def log_tg(text, tg=None):
+    if tg:
+        return send_message(text, tg.tg_chat_id, tg.tg_token)
+    logging.info(text)
+
+
+@contextmanager
+def notify(text, tg):
+    log_tg(f'start {text}', tg)
+    try:
+        yield
+    finally:
+        log_tg(f'stop {text}', tg)

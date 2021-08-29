@@ -1,8 +1,7 @@
-from pathlib import PosixPath
-from typing import Optional, Union, Literal, List, Tuple
-from typing import NewType
-
 from datetime import datetime
+from pathlib import PosixPath
+from typing import Optional, List, NewType
+
 from pydantic import BaseModel
 
 _Url = NewType('_Url', str)
@@ -28,7 +27,12 @@ class Stream(BaseModel):
 class Extension(BaseModel):
     flist: List[PosixPath]
     stop_time: Optional[datetime]
+    default_background: str
 
+
+class TG(BaseModel):
+    tg_chat_id: Optional[str]
+    tg_token: Optional[str]
 
 class Config(BaseModel):
     youtube_key: str
@@ -36,10 +40,9 @@ class Config(BaseModel):
     audio_path: str
     timeout: Optional[int]
     google_api_key: Optional[str]
-    tg_chat_id: Optional[str]
-    tg_token: Optional[str]
     hours: Optional[list]
     prayers: Optional[List[Prayer]]
     ini: Optional[str]
     extension: Optional[Extension]
+    tg: Optional[TG]
     streams: Optional[Stream]

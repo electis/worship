@@ -3,9 +3,8 @@ from datetime import datetime
 from pathlib import Path
 
 from helpers import stream_files
-from managers import get_config
-from serializers import Config
-from utils import extend, proceed_stream, log_tg
+from managers import ConfigManager
+from utils import proceed_stream, notify
 
 
 def stream(audio_path: str, background_file: str, use_meta: bool = None):
@@ -22,31 +21,22 @@ def stream(audio_path: str, background_file: str, use_meta: bool = None):
 
 
 def proceed_worship():
-    config: Config = get_config()
-    config = extend(config)
+    config = ConfigManager()
     if config.hours:
         minutes = 0
         while True:
             if datetime.now().hour in config.hours:
-                config: Config = get_config()
-                config = extend(config)
-                log_tg('Worship start', config)
-                proceed_stream(config)
-                log_tg('Worship end', config)
+                with notify('Worship', config):
+                    proceed_stream(config.extension)
             else:
                 time.sleep(60)
                 minutes += 1
             if minutes == 5:
-                config: Config = get_config()
-                config = extend(config)
+                config.get_config()
                 minutes = 0
     else:
-        log_tg('Worship start', config)
-        proceed_stream(config)
-        log_tg('Worship end', config)
+        with notify('Worship', config.tg):
+            proceed_stream(config.extension)
 
 if __name__ == '__main__':
     proceed_worship()
-    # audio_path = os.getenv('audio_path', '/storage/download/music/worship/*.mp3')
-    # background_file = os.getenv('background_file', '/storage/download/music/church.jpg')
-    # stream(audio_path, background_file, os.getenv('use_meta', True))
