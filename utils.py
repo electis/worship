@@ -30,19 +30,23 @@ class Fake:
         if not text:
             return []
 
+        _border = 4
+
         if up:
+            _fontsize = 32
             part = '1/16'
             fontcolor = "fontcolor=yellow"
         else:
+            _fontsize = 24
             part = '11/12'
             fontcolor = "fontcolor=white"
-        fontsize = "fontsize=24"
+        fontsize = f"fontsize={_fontsize}"
         box = "box=1"
         boxcolor = "boxcolor=black@0.5"
-        border = "boxborderw=4"
+        border = f"boxborderw={_border}"
         x = "x=(w-text_w)/2"
         # y = f"y=h*{part}+(text_h+20)*{row}"
-        y = f"y=h*{part}+32*{row}"
+        y = f"y=h*{part}+({_fontsize + _border * 2})*{row}"
         # y = "y=(h-text_h)*3/4"
 
         return [
@@ -62,7 +66,7 @@ class Fake:
 
         result = meta
 
-        pray_rows = insert_line_breaks(text_list[1]).split('\n')
+        pray_rows = insert_line_breaks(text_list[1], max_length=70).split('\n')
 
         for row, string in enumerate(pray_rows, 1):
             cmd_list = Fake.draw_text(string, up=True, row=row)
@@ -76,16 +80,16 @@ class Fake:
         return result
 
 
-def insert_line_breaks(text: str):
+def insert_line_breaks(text: str, max_length=90):
     result = ''
     length = 0
     for num, char in enumerate(text):
-        if length > 70:
+        if length > max_length - max_length * 0.2:
             if text[num] == ' ':
                 result += '\n'
                 length = 0
                 char = ''
-        elif length > 90:
+        elif length > max_length:
             result += '\n'
             length = 0
         if text[num:num + 1] == '\n':

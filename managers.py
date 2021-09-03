@@ -6,7 +6,7 @@ from environs import Env
 import requests
 from pylivestream.glob import fileglob
 
-from serializers import Config, Extension
+from serializers import Config, Extension, TG
 
 
 class ConfigManager:
@@ -40,11 +40,11 @@ class ConfigManager:
             hours=env.list('hours', [], subcast=int),
             google_api_key=env('GOOGLE_API_KEY', None),
         )
-        tg = dict(
+        tg = TG(
             tg_chat_id=env('TGRAM_CHATID', None),
             tg_token=env('TGRAM_TOKEN', None),
         )
-        if tg['tg_chat_id'] and tg['tg_token']:
+        if tg.tg_chat_id and tg.tg_token:
             config.tg = tg
         self._config = config
         return config
