@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
+import json
 from pathlib import Path
 
+import logging
 import random
 from environs import Env
 import requests
@@ -61,7 +63,16 @@ class ConfigManager:
         else:
             stop_time = None
 
-        config.extension = Extension(flist=flist, stop_time=stop_time, default_background=config.default_background)
+        try:
+            with open('bible.txt') as f:
+                promises = json.load(f)
+        except Exception as exc:
+            logging.warning(str(exc))
+            promises = None
+
+        config.extension = Extension(
+            flist=flist, stop_time=stop_time, default_background=config.default_background, promises=promises
+        )
 
         with open("youtube.key", "w") as text_file:
             print(config.youtube_key, file=text_file)

@@ -28,6 +28,7 @@ class Extension(BaseModel):
     flist: List[PosixPath]
     stop_time: Optional[datetime]
     default_background: str
+    promises: Optional[List[str]]
 
 
 class TG(BaseModel):
