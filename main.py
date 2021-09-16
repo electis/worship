@@ -27,6 +27,7 @@ def proceed_worship():
         while True:
             if datetime.now().hour in config.hours:
                 with notify('Worship', config.tg):
+                    config.post2group()
                     proceed_stream(config.extension)
             else:
                 time.sleep(60)
@@ -36,6 +37,7 @@ def proceed_worship():
                 minutes = 0
     else:
         with notify('Worship', config.tg):
+            config.post2group()
             proceed_stream(config.extension)
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 import logging
 from contextlib import contextmanager
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
 
@@ -10,11 +10,10 @@ import requests
 
 from pylivestream import FileIn
 from pylivestream.ffmpeg import Ffmpeg
-from pylivestream.glob import fileglob
 from pylivestream.utils import meta_caption
 from tinytag import TinyTag
 
-from serializers import Config, Extension
+from serializers import Extension
 
 logging.basicConfig(
     filename='output.log', level=logging.INFO,

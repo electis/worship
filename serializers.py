@@ -41,6 +41,10 @@ class Config(BaseModel):
     audio_path: str
     timeout: Optional[int]
     google_api_key: Optional[str]
+    task_url: Optional[str]
+    task_token: Optional[str]
+    youtube_channel: Optional[str]
+    chat_id: Optional[str]
     hours: Optional[list]
     prayers: Optional[List[Prayer]]
     ini: Optional[str]

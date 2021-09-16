@@ -9,6 +9,7 @@ import requests
 from pylivestream.glob import fileglob
 
 from serializers import Config, Extension, TG
+from utils import log_tg
 
 
 class ConfigManager:
@@ -41,6 +42,9 @@ class ConfigManager:
             timeout=env.int('timeout'),
             hours=env.list('hours', [], subcast=int),
             google_api_key=env('GOOGLE_API_KEY', None),
+            task_url=env('task_url', None),
+            task_token=env('task_token', None),
+            youtube_channel=env('youtube_channel', None),
         )
         tg = TG(
             tg_chat_id=env('TGRAM_CHATID', None),
@@ -78,3 +82,27 @@ class ConfigManager:
             print(config.youtube_key, file=text_file)
 
         return config
+
+    def run_task(self, params):
+        if self._config.task_url and self._config.task_token:
+            requests.post(self._config.task_url, headers=dict(Authorization=f'Token {self._config.task_token}'),
+                          json=params)
+
+    def post2group(self):
+        if self._config.youtube_channel and self._config.chat_id:
+            params = {
+                "task": "post2group",
+                "delta_time": "3:00",
+                "params": {
+                    "chat_id": self._config.chat_id,
+                    "text": "Время молитвы",
+                    "delete_after": "10:00:00",
+                    "youtube_live": self._config.youtube_channel,
+                    "youtube_filter": "Время молитвы"
+                }
+            }
+            try:
+                self.run_task(params)
+            except Exception as exc:
+                logging.warning(str(exc))
+                log_tg(f'post2group {exc}', self._config.tg)
