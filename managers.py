@@ -45,6 +45,7 @@ class ConfigManager:
             task_url=env('task_url', None),
             task_token=env('task_token', None),
             youtube_channel=env('youtube_channel', None),
+            chat_id=env('chat_id', None),
         )
         tg = TG(
             tg_chat_id=env('TGRAM_CHATID', None),
