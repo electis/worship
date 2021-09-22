@@ -93,7 +93,7 @@ class ConfigManager:
         if self._config.youtube_channel and self._config.chat_id:
             params = {
                 "task": "post2group",
-                "delta_time": "3:00",
+                "delta_time": "5:00",
                 "params": {
                     "chat_id": self._config.chat_id,
                     "text": "Время молитвы",
