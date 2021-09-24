@@ -97,7 +97,7 @@ class ConfigManager:
                 "params": {
                     "chat_id": self._config.chat_id,
                     "text": "Время молитвы",
-                    "delete_after": "10:00:00",
+                    "delete_after": "24:00:00",
                     "youtube_live": self._config.youtube_channel,
                     "youtube_filter": "Время молитвы"
                 }
