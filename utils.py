@@ -137,14 +137,14 @@ def send_message(text, chat_id, token, parse_mode='Markdown'):
     try:
         response = requests.get(f'https://api.telegram.org/bot{token}/sendMessage', timeout=10, params=dict(
             chat_id=chat_id, text=text, parse_mode=parse_mode))
-    except Exception as Ex:
-        print(Ex)
+    except Exception as exc:
+        logging.warning(f'send_message Exception: {exc}')
         return False
     else:
         if response.status_code == 200:
             return response.json()
         else:
-            print(f'status_code {response.status_code}')
+            logging.warning(f'send_message status_code {response.status_code}')
             return False
 
 
@@ -155,9 +155,13 @@ def log_tg(text, tg=None):
 
 
 @contextmanager
-def notify(text, tg):
-    log_tg(f'start {text}', tg)
+def notify(text, tg, only_error=True):
+    if not only_error:
+        log_tg(f'start {text}', tg)
     try:
         yield
-    finally:
-        log_tg(f'stop {text}', tg)
+    except Exception as exc:
+        log_tg(f'Exception {exc}', tg)
+    else:
+        if not only_error:
+            log_tg(f'stop {text}', tg)
