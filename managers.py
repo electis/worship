@@ -92,12 +92,13 @@ class ConfigManager:
     def post2group(self):
         if self._config.youtube_channel and self._config.chat_id:
             params = {
-                "task": "post2group",
+                # "task": "post2group",
+                "task": "start_worship",
                 "delta_time": "5:00",
                 "params": {
                     "chat_id": self._config.chat_id,
                     "text": "Время молитвы",
-                    "delete_after": "23:55:00",
+                    # "delete_after": "23:55:00",
                     "youtube_live": self._config.youtube_channel,
                     "youtube_filter": "Время молитвы"
                 }
