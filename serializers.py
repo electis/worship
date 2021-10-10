@@ -46,6 +46,7 @@ class Config(BaseModel):
     youtube_channel: Optional[str]
     chat_id: Optional[str]
     hours: Optional[list]
+    days: Optional[list]
     prayers: Optional[List[Prayer]]
     ini: Optional[str]
     extension: Optional[Extension]

@@ -23,6 +23,10 @@ class ConfigManager:
         return self._config.hours
 
     @property
+    def days(self):
+        return self._config.days
+
+    @property
     def tg(self):
         return self._config.tg
 
@@ -41,6 +45,7 @@ class ConfigManager:
             audio_path=env('audio_path'),
             timeout=env.int('timeout'),
             hours=env.list('hours', [], subcast=int),
+            days=env.list('days', [], subcast=int),
             google_api_key=env('GOOGLE_API_KEY', None),
             task_url=env('task_url', None),
             task_token=env('task_token', None),

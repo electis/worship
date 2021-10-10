@@ -25,7 +25,10 @@ def proceed_worship():
     if config.hours:
         minutes = 0
         while True:
-            if datetime.now().hour in config.hours:
+            now = datetime.now()
+            proceed_time: bool = now.hour in config.hours
+            proceed_days: bool = True if not config.days else now.weekday() in config.days
+            if proceed_time and proceed_days:
                 with notify('Worship', config.tg):
                     config.post2group()
                     proceed_stream(config.extension)
