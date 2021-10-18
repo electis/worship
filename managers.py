@@ -38,7 +38,7 @@ class ConfigManager:
 
     def get_config(self):
         env = Env()
-        env.read_env()
+        env.read_env(override=True)
         config = Config(
             youtube_key=env('youtube_key'),
             default_background=env('default_background'),
