@@ -51,6 +51,7 @@ class ConfigManager:
             task_token=env('task_token', None),
             youtube_channel=env('youtube_channel', None),
             chat_id=env('chat_id', None),
+            delta_minutes=env.int('delta_minutes', 7),
         )
         tg = TG(
             tg_chat_id=env('TGRAM_CHATID', None),
@@ -99,7 +100,7 @@ class ConfigManager:
             params = {
                 # "task": "post2group",
                 "task": "start_worship",
-                "delta_time": "5:00",
+                "delta_time": f"{self._config.delta_minutes}:00",
                 "params": {
                     "chat_id": self._config.chat_id,
                     "text": "Время молитвы",

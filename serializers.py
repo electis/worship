@@ -52,3 +52,4 @@ class Config(BaseModel):
     extension: Optional[Extension]
     tg: Optional[TG]
     streams: Optional[Stream]
+    delta_minutes: int
