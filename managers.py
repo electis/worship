@@ -62,6 +62,16 @@ class ConfigManager:
         self._config = config
         return config
 
+    @staticmethod
+    def load_bible(raise_exception=False):
+        try:
+            with open('bible.txt') as f:
+                return json.load(f)
+        except Exception as exc:
+            logging.warning(str(exc))
+            if raise_exception:
+                raise
+
     def extend(self):
         config = self._config
         video_path = Path('/'.join(config.audio_path.split('/')[:-1]))
@@ -74,15 +84,8 @@ class ConfigManager:
         else:
             stop_time = None
 
-        try:
-            with open('bible.txt') as f:
-                promises = json.load(f)
-        except Exception as exc:
-            logging.warning(str(exc))
-            promises = None
-
         config.extension = Extension(
-            flist=flist, stop_time=stop_time, default_background=config.default_background, promises=promises
+            flist=flist, stop_time=stop_time, default_background=config.default_background, promises=self.load_bible()
         )
 
         with open("youtube.key", "w") as text_file:
