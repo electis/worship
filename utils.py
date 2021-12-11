@@ -79,7 +79,7 @@ class Fake:
         return result
 
 
-def insert_line_breaks(text: str, max_length=90):
+def insert_line_breaks(text: str, max_length=85):
     result = ''
     length = 0
     for num, char in enumerate(text):
