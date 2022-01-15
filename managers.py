@@ -95,8 +95,16 @@ class ConfigManager:
 
     def run_task(self, params):
         if self._config.task_url and self._config.task_token:
-            requests.post(self._config.task_url, headers=dict(Authorization=f'Token {self._config.task_token}'),
-                          json=params)
+            try:
+                from requests.adapters import HTTPAdapter
+                s = requests.Session()
+                s.mount(self._config.task_url, HTTPAdapter(max_retries=5))
+                s.post(self._config.task_url, headers=dict(Authorization=f'Token {self._config.task_token}'),
+                       json=params)
+            except Exception:
+                requests.post(self._config.task_url, headers=dict(Authorization=f'Token {self._config.task_token}'),
+                              json=params)
+                raise
 
     def post2group(self):
         if self._config.youtube_channel and self._config.chat_id:
