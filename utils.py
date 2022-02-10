@@ -64,8 +64,8 @@ class Fake:
             return meta
 
         result = meta
-
-        pray_rows = insert_line_breaks(text_list[1], max_length=70).split('\n')
+        # TODO max_length in settings
+        pray_rows = insert_line_breaks(text_list[1], max_length=65).split('\n')
 
         for row, string in enumerate(pray_rows, 1):
             cmd_list = Fake.draw_text(string, up=True, row=row)
