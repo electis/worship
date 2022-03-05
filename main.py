@@ -45,6 +45,6 @@ def proceed_worship(arg=None):
             proceed_stream(config.extension)
 
 if __name__ == '__main__':
-    print('Available param: now')
     arg = sys.argv[1].lower() if len(sys.argv) > 1 else None
+    print('Available param: now', f'Param: {arg}')
     proceed_worship(arg)
