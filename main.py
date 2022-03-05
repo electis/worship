@@ -1,6 +1,7 @@
 import time
 from datetime import datetime
 from pathlib import Path
+import sys
 
 from helpers import stream_files
 from managers import ConfigManager
@@ -20,9 +21,9 @@ def stream(audio_path: str, background_file: str, use_meta: bool = None):
     )
 
 
-def proceed_worship():
+def proceed_worship(arg=None):
     config = ConfigManager()
-    if config.hours:
+    if config.hours and arg != 'now':
         minutes = 0
         while True:
             now = datetime.now()
@@ -44,4 +45,6 @@ def proceed_worship():
             proceed_stream(config.extension)
 
 if __name__ == '__main__':
-    proceed_worship()
+    print('Available param: now')
+    arg = sys.argv[1].lower() if len(sys.argv) > 1 else None
+    proceed_worship(arg)
