@@ -28,6 +28,7 @@ class Extension(BaseModel):
     flist: List[PosixPath]
     stop_time: Optional[datetime]
     default_background: str
+    server_name: str
     promises: Optional[List[str]]
 
 
@@ -36,7 +37,8 @@ class TG(BaseModel):
     tg_token: Optional[str]
 
 class Config(BaseModel):
-    youtube_key: str
+    server_key: str
+    server_name: str
     default_background: str
     audio_path: str
     timeout: Optional[int]

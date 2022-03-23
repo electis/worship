@@ -40,7 +40,8 @@ class ConfigManager:
         env = Env()
         env.read_env(override=True)
         config = Config(
-            youtube_key=env('youtube_key'),
+            server_key=env('server_key', env('youtube_key', None)),
+            server_name=env('server_name', 'youtube'),
             default_background=env('default_background'),
             audio_path=env('audio_path'),
             timeout=env.int('timeout'),
@@ -85,11 +86,12 @@ class ConfigManager:
             stop_time = None
 
         config.extension = Extension(
-            flist=flist, stop_time=stop_time, default_background=config.default_background, promises=self.load_bible()
+            flist=flist, stop_time=stop_time, default_background=config.default_background, promises=self.load_bible(),
+            server_name=config.server_name
         )
 
-        with open("youtube.key", "w") as text_file:
-            print(config.youtube_key, file=text_file)
+        with open(f"{config.server_name}.key", "w") as text_file:
+            print(config.server_key, file=text_file)
 
         return config
 

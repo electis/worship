@@ -118,7 +118,7 @@ def proceed_stream(extension: Extension):
                 caption = pray_text
 
             with patch.object(Ffmpeg, 'drawtext', Fake.draw_pray):
-                s = FileIn(Path('pylivestream.ini'), ['youtube'],
+                s = FileIn(Path('pylivestream.ini'), [extension.server_name],
                            infn=audio, loop=False, image=extension.default_background, caption=caption, yes=True)
             # TODO without caption run too slow (without -codec:v libx264 -pix_fmt yuv420p -preset ultrafast -b:v 2000)
             # TODO Òû âåñü ìèð äëÿ ìåíÿ - http://fon-ki.com/ - 4UBAND (4f41e4c07167a1.mp3)
