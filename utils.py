@@ -113,9 +113,9 @@ def proceed_stream(extension: Extension):
             pray_text = get_pray(extension, num)
             try:
                 caption = meta_caption(TinyTag.get(str(audio)))
-                caption += pray_text
             except LookupError:
-                caption = pray_text
+                caption = str(audio)
+            caption += pray_text
 
             with patch.object(Ffmpeg, 'drawtext', Fake.draw_pray):
                 s = FileIn(Path('pylivestream.ini'), [extension.server_name],
