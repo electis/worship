@@ -41,7 +41,7 @@ def proceed_worship(arg=None):
                 minutes = 0
     else:
         with notify('Worship', config.tg):
-            config.post2group()
+            # config.post2group()
             proceed_stream(config.extension)
 
 if __name__ == '__main__':
